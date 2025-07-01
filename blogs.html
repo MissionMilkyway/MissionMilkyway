@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Milkyway</title>
+    <link rel="stylesheet" href="Blogstyles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo_mm">
+            <a href="#" class="logo">MISSION <span class="logo2">MILKYWAY</span></a>
+        </div>
+
+        <img src="Images/galaxy_img2.png" class="menu_image" onclick="toggleMenu()">
+
+
+        <nav class="easy_access" id="menu">
+            <a href="index.html" class="active">Home</a>
+            <a href="index.html#About">About</a>
+            <a href="#Blogs">Blogs</a>
+            <a href="index.html#Contribute">Contribute</a>
+            <a href="index.html#Contact">Contact us</a>
+        </nav>
+        
+    </header>
+    <section class="blog-background">
+        <a href="Blogs/Blog1.html" style="display: contents; color: inherit; text-decoration: none;">
+            <div class="blogTile" style="margin-top: 200px;">
+            <img src="Blogs/Images/night-sky1.jpg" alt="Blog Image">
+            <div class="blog-content">
+            <h2 class="blog-title">Is "space day" feasible?</h2>
+            <p class="blog-snippet">
+                Vishnu Vardhan, 01 July 25<br><br>
+                5 min read
+            </p>
+            </div>
+        </a>
+    </div>
+    <a href="Blogs/Blog2.html" style="display: contents; color: inherit; text-decoration: none;">
+        <div class="blogTile">
+            <img src="Blogs/Images/turtles.jpg" alt="Blog Image">
+            <div class="blog-content">
+            <h2 class="blog-title">Is Skyglow bad?</h2>
+            <p class="blog-snippet">
+                Vishnu Vardhan, 01 July 25<br><br>
+                5 min read           
+            </p>
+            </div>
+        </div>
+    </a>
+    <div class="blogTile">
+        <img src="Blogs/Images/night-sky1.jpg" alt="Blog Image">
+        <div class="blog-content">
+        <h2 class="blog-title">Is "space day" feasible?</h2>
+        <p class="blog-snippet">
+            Space Day is not to launch rockets, but to pause and look up. It's not about conquering the stars, but reclaiming our connection to them.
+        </p>
+        </div>
+    </div>
+    <div class="blogTile">
+        <img src="Blogs/Images/turtles.jpg" alt="Blog Image">
+        <div class="blog-content">
+        <h2 class="blog-title">How can we know if our oceans are safe?</h2>
+        <p class="blog-snippet">
+            This is a short preview of the blog post content. Click to read more about this exciting topic.
+        </p>
+        </div>
+    </div>
+    </section>
+    <script>
+        function toggleMenu() {
+            var menu = document.getElementById('menu');
+            if (menu.style.display === 'block') {
+                menu.style.display = 'none';
+            } else {
+                menu.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
