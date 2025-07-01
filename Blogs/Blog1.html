@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Milkyway</title>
+    <link rel="stylesheet" href="BlogsPage.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+<body>
+     <header>
+        <div class="logo_mm">
+            <a href="#" class="logo">MISSION <span class="logo2">MILKYWAY</span></a>
+        </div>
+
+        <img src="/Images/galaxy_img2.png" class="menu_image" onclick="toggleMenu()">
+
+-
+        <nav class="easy_access" id="menu">
+            <a href="/index.html" class="active">Home</a>
+            <a href="/index.html#About">About</a>
+            <a href="/blogs.html">Blogs</a>
+            <a href="/index.html#Contribute">Contribute</a>
+            <a href="/index.html#Contact">Contact us</a>
+        </nav>
+                                                                                        
+    </header>
+
+    <section class="blog-background" style="background-image: url(/Images/night-sky5.jpg);">     
+        <div class="blogTile">
+        <img src="/Blogs/Images/night-sky1.jpg" alt="Blog Image">
+        <div class="blog-content">
+        <h2 class="blog-title">Is "space day" feasible?</h2>
+        <p class="blog-details">
+            01 July 25<br><br>
+            Vishnu Vardhan<br><br>
+            5 min read
+        </p>
+        <i id="share-btn" class="fas fa-share-alt"></i>
+        <a class="fa fa-instagram" style="font-size:20px; padding-left: 10px; color: wheat;" href="https://www.instagram.com/vish__1309/" target="_blank"></a>
+
+        </div>
+        
+    </div>
+    <div class="blog-post">
+    <p>
+        <p class="blog_post_headings">What do you mean by a Space Day?</p><br>
+
+Space Day is a day recognized globally where everyone on earth would turn off all the non-essential, ideally all the lights, during a specific time of the day to encourage people to lookout their windows and appreciate the beauty of the stars above us.
+
+But, the questions like "is it even possible?" , "is it necessary?", "is it all advantageous?", "what are non-essential lights?" are always asked, so lets answer them right now!
+<br><br>
+<p class="blog_post_headings">Is it necessary?
+</p>
+<br>
+Absolutely! We are in an era of rapid human development but it comes at a cost. Natural beauty once common, is vanishing before our eyes. We can figure out for ourselves that most of the things we used to see frequently are now nowhere to be found whether they're birds or the mountains you loved the most or the sky either, its not the same as before. Remember the times we used to sit underneath the starlit sky and trace out constellations among them, but now you'd be really lucky to even see a couple of stars. Space Day is more than just switching off the lights, it's a moment to appreciate, remember and preserve the night sky which was lost on our way. So the point here is we really need this day in our lives to reminisce the past while still accepting human growth and to show the future generations what was once lost.
+<br><br>
+<p class="blog_post_headings">Is it even possible?
+</p>
+<br>
+It is definitely possible, but only if all of us contribute to it. Cities, communities, governments, and individuals need to unite for a shared purpose. If coordinated properly, even a single hour of global effort could make a significant impact.
+<br><br>
+<p class="blog_post_headings">What are non-essential lights?
+</p>
+<br>
+Non-essential lights are the lights which are not really required for your daily tasks and immediate safety, and also the lights which are producing extra unnecessary light towards the sky. These include decorative lights, advertising displays, excessive street lighting, stadium floodlights, and construction site lighting that points skyward. These sources of light often contribute to skyglow(the brightening of night sky which drowns out starlight).
+
+<br><br>
+<p class="blog_post_headings">Is it entirely advantageous?
+</p>
+<br>
+While the benefits are a lot- environmental awareness, energy conservation, educational value, and emotional connection to the cosmos, its not entirely advantageous because a sudden large scale reduction in lighting can impact the productivity of industries and individuals for sometime And there's an increased risk of crime in poorly lit areas, but these can be solved by thoughtful planning and having increased police patrolling during the event.
+<br><br>
+<p class="blog_post_headings">So what does this all mean?
+</p>
+<br>
+Space Day is not to launch rockets, but to pause and look up. It's not about conquering the stars, but reclaiming our connection to them.
+
+ </p>
+    </div>        
+    </section>
+    <script>
+    document.getElementById('share-btn').addEventListener('click', async () => {
+        if (navigator.share) {
+        try {
+            await navigator.share({
+            title: document.title,
+            url: window.location.href
+            });
+        } catch (err) {
+            console.error('Share failed:', err);
+        }
+        } else {
+        const tempInput = document.createElement('input');
+        document.body.appendChild(tempInput);
+        tempInput.value = window.location.href;
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+        alert("Link copied to clipboard!");
+        }
+    });
+    </script>
+    <script>
+        function toggleMenu() {
+            var menu = document.getElementById('menu');
+            if (menu.style.display === 'block') {
+                menu.style.display = 'none';
+            } else {
+                menu.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

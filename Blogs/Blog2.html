@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Milkyway</title>
+    <link rel="stylesheet" href="BlogsPage.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+<body>
+     <header>
+        <div class="logo_mm">
+            <a href="#" class="logo">MISSION <span class="logo2">MILKYWAY</span></a>
+        </div>
+
+        <img src="/Images/galaxy_img2.png" class="menu_image" onclick="toggleMenu()">
+
+-
+        <nav class="easy_access" id="menu">
+            <a href="/index.html" class="active">Home</a>
+            <a href="/index.html#About">About</a>
+            <a href="/blogs.html">Blogs</a>
+            <a href="/index.html#Contribute">Contribute</a>
+            <a href="/index.html#Contact">Contact us</a>
+        </nav>
+        
+    </header>
+
+    <section class="blog-background" style="background-image: url(/Images/night-sky5.jpg);">
+        
+        <div class="blogTile">
+        <img src="/Blogs/Images/turtles.jpg" alt="Blog Image">
+        <div class="blog-content">
+        <h2 class="blog-title">Is Skyglow bad?</h2>
+        <p class="blog-details">
+            01 July 25<br><br>
+            Vishnu Vardhan<br><br>
+            5 min read
+        </p>
+        <i id="share-btn" class="fas fa-share-alt"></i>
+        <a class="fa fa-instagram" style="font-size:20px; padding-left: 10px; color: wheat;" href="https://www.instagram.com/vish__1309/" target="_blank"></a>
+
+        </div>
+        
+    </div>
+    <div class="blog-post">
+        <p>
+            <p class="blog_post_headings">What is Skyglow?</p><br>
+
+
+Skyglow is a term used for referring to skies with artificial lighting. Skyglow is an immediate cause of using unnecessary and excessive lighting skywards.
+
+Skyglow outshines the starlight, completely blocking it, resulting in static glow in the sky making it harder to see celestial objects in the sky. This issue is far more bigger than it seems, skyglow affects humans as well as animals, and also impacts the ecosystem's natural patterns.
+<br><br>
+<p class="blog_post_headings">How is skyglow bad?</p>
+<br>
+
+
+Sleep cycles are disturbed for human beings due to skyglow. Studies have proved that excessive lighting especially blue lights cause sleep disruption in humans as it affects melatonin production, making it harder to fall asleep and harder to stay asleep.
+<br><br>
+
+
+Animals are significantly in trouble, especially the nocturnal animals like<br>
+ birds,<br> tortoise,<br> insects<br> as their feeding, reproductive and migration cycles are being disturbed.
+<br><br>
+Thousands of birds die every year due to collisions to structures with excessive lighting when they are in migrating period. Unnatural lighting causes them to deter from their course and are drawn towards it.
+Migratory birds are affected the most, causing them to fly off course, become exhausted or collide with structures.
+<br><br>
+
+Vast number of turtle hatchlings are dying as they have a natural  instinct to go into the sea guided by the moon light after hatching but due to uncontrolled street lights, they are drawn away from the oceans and towards the roads, leading to dehydration, vehicle stepovers, exhaustion or predation.
+
+Artificial lights are causing the female turtles to detour from a beach for nesting.
+<br><br>
+
+Many insects depend on dark conditions to navigate and find their mates, but artificial lights disrupt these behaviours. And declining insect population leads to bigger problems as birds, bats and other animals rely on them for food.
+<br><br>
+
+Light pollution causes difficulty for nocturnal mammals to find food and shelter, as they rely on darkness for hunting and avoiding predators.
+Light pollution can create barriers that prevent animals from accessing certain areas, leading to habitat fragmentation and reduced genetic diversity.
+
+
+        </p>
+    </div>
+    
+        
+    </section>
+    <script>
+    document.getElementById('share-btn').addEventListener('click', async () => {
+        if (navigator.share) {
+        try {
+            await navigator.share({
+            title: document.title,
+            url: window.location.href
+            });
+        } catch (err) {
+            console.error('Share failed:', err);
+        }
+        } else {
+        const tempInput = document.createElement('input');
+        document.body.appendChild(tempInput);
+        tempInput.value = window.location.href;
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+        alert("Link copied to clipboard!");
+        }
+    });
+    </script>
+    <script>
+        function toggleMenu() {
+            var menu = document.getElementById('menu');
+            if (menu.style.display === 'block') {
+                menu.style.display = 'none';
+            } else {
+                menu.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
