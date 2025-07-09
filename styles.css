@@ -433,7 +433,8 @@ figure {
 
 .promotion_text {
     font-size: 30px;
-    margin-left: 500px;
+    margin-left: 0px;
+    text-align: center;
     margin-top: 10px;
     animation: scale-up linear;
     animation-timeline: view();
@@ -444,7 +445,7 @@ figure {
 .instagram_icon_page7 {
     text-align: center;
     padding-top: 20px;
-
+    margin-right: 10px;
 }
     
 
@@ -459,6 +460,10 @@ form input{
     width: 500px;
     background-color: rgba(128, 128, 128, 0.125);
     color: wheat;
+}
+
+.email_field {
+    background-color: #3b3934b3;
 }
 
 .submit_button {
