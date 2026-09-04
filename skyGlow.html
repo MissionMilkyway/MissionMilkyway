@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Sky Glow | Mission Milkyway</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        :root {
+            --brand-wheat: wheat;
+            --brand-gold: #f59e0b;
+            --card-bg: rgba(10, 14, 24, 0.78);
+            --card-border: rgba(245, 222, 179, 0.3);
+            --text-main: #f8fafc;
+            --text-muted: #e2e8f0;
+            --accent: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.25);
+            --error: #f87171;
+            --emerald: #34d399;
+            --amber: #fbbf24;
+            --rose: #f43f5e;
+        }
+
+        /* Fixed background image covering entire display without black gaps */
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(rgba(5, 7, 13, 0.25), rgba(5, 7, 13, 0.38)), 
+                        url('Images/night-sky5.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--text-main);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        .analyzer_section {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 100px 20px 50px 20px;
+            box-sizing: border-box;
+        }
+
+        .analyzer_card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
+            max-width: 540px;
+            width: 100%;
+            padding: 32px 28px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .analyzer_card h1 {
+            color: var(--brand-wheat);
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            letter-spacing: 0.03em;
+        }
+
+        .analyzer_subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+
+        .dropzone {
+            display: block;
+            border: 2px dashed rgba(245, 222, 179, 0.45);
+            border-radius: 12px;
+            padding: 28px 16px;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.25s ease;
+            background: rgba(0, 0, 0, 0.35);
+            color: var(--text-main);
+        }
+
+        .dropzone:hover {
+            border-color: var(--brand-wheat);
+            background: rgba(245, 222, 179, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .dropzone i {
+            color: var(--brand-wheat);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        /* Scan Viewport */
+        .scan_viewport {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 24px;
+            display: none;
+            border: 1px solid var(--card-border);
+            aspect-ratio: 16 / 10;
+            background: #000;
+        }
+
+        #image_preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .scan_overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 40%, rgba(245, 222, 179, 0.28) 50%, transparent 60%);
+            background-size: 100% 200%;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .scan_viewport.scanning .scan_overlay {
+            opacity: 1;
+            animation: scanSweep 1.8s ease-in-out infinite;
+        }
+
+        .scan_viewport.scanning::after {
+            content: 'ANALYZING NIGHT SKY EXPOSURE...';
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.72rem;
+            letter-spacing: 0.14em;
+            font-weight: 700;
+            color: var(--brand-wheat);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 5px 14px;
+            border-radius: 6px;
+            border: 1px solid rgba(245, 222, 179, 0.45);
+            backdrop-filter: blur(4px);
+        }
+
+        @keyframes scanSweep {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 0% 200%; }
+        }
+
+        /* Results & Gauge */
+        .results {
+            display: none;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .results.visible {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .gauge_wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 10px 0 20px;
+            position: relative;
+        }
+
+        .gauge_svg {
+            width: 140px;
+            height: 140px;
+            transform: rotate(-90deg);
+        }
+
+        .gauge_bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.12);
+            stroke-width: 8;
+        }
+
+        .gauge_meter {
+            fill: none;
+            stroke: var(--accent);
+            stroke-width: 8;
+            stroke-linecap: round;
+            stroke-dasharray: 314;
+            stroke-dashoffset: 314;
+            transition: stroke-dashoffset 1.2s cubic-bezier(0.2, 0.8, 0.2, 1), stroke 0.4s ease;
+            filter: drop-shadow(0 0 6px var(--accent-glow));
+        }
+
+        .gauge_text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .gauge_score {
+            font-size: 2rem;
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -0.02em;
+            color: var(--text-main);
+        }
+
+        .gauge_label {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-top: 4px;
+        }
+
+        .stats_grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .stat_card {
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat_label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat_val {
+            font-size: 0.98rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .verdict_box {
+            background: rgba(0, 0, 0, 0.35);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 10px 10px 0;
+            padding: 14px 16px;
+            font-size: 0.88rem;
+            line-height: 1.5;
+            color: #f1f5f9;
+            text-align: left;
+        }
+
+        /* Error notification */
+        .error_banner {
+            display: none;
+            background: rgba(248, 113, 113, 0.18);
+            border: 1px solid rgba(248, 113, 113, 0.5);
+            border-radius: 10px;
+            padding: 14px 16px;
+            color: #fca5a5;
+            font-size: 0.88rem;
+            line-height: 1.45;
+            margin-bottom: 20px;
+            text-align: left;
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+
+        #hidden_canvas {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo_mm">
+            <a href="index.html" class="logo">MISSION <span class="logo2">MILKYWAY</span></a>
+        </div>
+
+        <img src="Images/galaxy_img2.png" class="menu_image" onclick="toggleMenu()" alt="Menu">
+
+        <nav class="easy_access" id="menu">
+            <a href="index.html#Home">Home</a>
+            <a href="index.html#About">About</a>
+            <a href="blogs.html">Blogs</a>
+            <a href="index.html#Contribute">Contribute</a>
+            <a href="skyGlow.html" class="active">Skyglow Analyzer</a>
+            <a href="index.html#Contact">Contact us</a>
+        </nav>
+    </header>
+
+    <main class="analyzer_section">
+        <div class="analyzer_card">
+            <h1>Estimate Sky Glow</h1>
+            <p class="analyzer_subtitle">
+                Upload a raw or Night Mode sky exposure to estimate sky darkness and local light pollution.
+            </p>
+
+            <label class="dropzone" for="file_input">
+                <i class="fa fa-cloud-upload fa-2x"></i>
+                <div><strong>Select Night Sky Photo</strong> or drag & drop</div>
+            </label>
+            <input type="file" id="file_input" accept="image/*">
+
+            <div class="scan_viewport" id="scan_viewport">
+                <img id="image_preview" alt="Sky capture preview">
+                <div class="scan_overlay"></div>
+            </div>
+
+            <div class="error_banner" id="error_banner"></div>
+
+            <div class="results" id="results">
+                <div class="gauge_wrapper">
+                    <svg class="gauge_svg" viewBox="0 0 120 120">
+                        <circle class="gauge_bg" cx="60" cy="60" r="50"></circle>
+                        <circle class="gauge_meter" id="gauge_meter" cx="60" cy="60" r="50"></circle>
+                    </svg>
+                    <div class="gauge_text">
+                        <div class="gauge_score" id="score_counter">0</div>
+                        <div class="gauge_label">Luminance</div>
+                    </div>
+                </div>
+
+                <div class="stats_grid">
+                    <div class="stat_card">
+                        <span class="stat_label">Sky Darkness Class</span>
+                        <span class="stat_val" id="bortle_val">--</span>
+                    </div>
+                </div>
+
+                <div class="verdict_box" id="advice_val">--</div>
+            </div>
+
+            <canvas id="hidden_canvas"></canvas>
+        </div>
+    </main>
+
+    <script>
+        const fileInput = document.getElementById('file_input');
+        const scanViewport = document.getElementById('scan_viewport');
+        const imagePreview = document.getElementById('image_preview');
+        const resultsContainer = document.getElementById('results');
+        const errorBanner = document.getElementById('error_banner');
+        const scoreCounter = document.getElementById('score_counter');
+        const gaugeMeter = document.getElementById('gauge_meter');
+        const bortleVal = document.getElementById('bortle_val');
+        const adviceVal = document.getElementById('advice_val');
+        const canvas = document.getElementById('hidden_canvas');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+        const CIRCUMFERENCE = 2 * Math.PI * 50; // r = 50 -> ~314.159
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            errorBanner.style.display = 'none';
+            resultsContainer.classList.remove('visible');
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                imagePreview.src = event.target.result;
+                scanViewport.style.display = 'block';
+                scanViewport.classList.add('scanning');
+
+                const img = new Image();
+                img.onload = () => {
+                    setTimeout(() => {
+                        scanViewport.classList.remove('scanning');
+                        analyzeImage(img);
+                    }, 650);
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        function analyzeImage(img) {
+            const sampleSize = 120;
+            canvas.width = sampleSize;
+            canvas.height = sampleSize;
+            ctx.drawImage(img, 0, 0, sampleSize, sampleSize);
+
+            const frameData = ctx.getImageData(0, 0, sampleSize, sampleSize).data;
+            const totalPixels = sampleSize * sampleSize;
+
+            let totalLum = 0;
+            let totalR = 0;
+            let totalB = 0;
+            const lumGrid = new Float32Array(totalPixels);
+            const colorSet = new Set();
+
+            for (let i = 0; i < frameData.length; i += 4) {
+                const r = frameData[i];
+                const g = frameData[i + 1];
+                const b = frameData[i + 2];
+                const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+
+                totalLum += lum;
+                totalR += r;
+                totalB += b;
+                lumGrid[i / 4] = lum;
+
+                const qKey = ((r >> 3) << 10) | ((g >> 3) << 5) | (b >> 3);
+                colorSet.add(qKey);
+            }
+
+            const avgLum = totalLum / totalPixels;
+            const avgR = totalR / totalPixels;
+            const avgB = totalB / totalPixels;
+
+            // 1. Palette entropy (Screenshots reject)
+            if (colorSet.size < 160) {
+                showError("Digital screenshot or flat graphics detected. Please upload an optical photo taken outdoors.");
+                return;
+            }
+
+            // 2. Star point detection (Radial symmetry check)
+            let starCount = 0;
+            for (let y = 2; y < sampleSize - 2; y++) {
+                for (let x = 2; x < sampleSize - 2; x++) {
+                    const idx = y * sampleSize + x;
+                    const current = lumGrid[idx];
+
+                    if (current > 70) {
+                        const up = lumGrid[idx - sampleSize];
+                        const down = lumGrid[idx + sampleSize];
+                        const left = lumGrid[idx - 1];
+                        const right = lumGrid[idx + 1];
+
+                        const dUp = current - up;
+                        const dDown = current - down;
+                        const dLeft = current - left;
+                        const dRight = current - right;
+
+                        const isSignificantPeak = (dUp > 20 && dDown > 20 && dLeft > 20 && dRight > 20);
+                        const symmetryRatio = Math.min(dUp, dDown, dLeft, dRight) / Math.max(dUp, dDown, dLeft, dRight);
+
+                        if (isSignificantPeak && symmetryRatio > 0.25) {
+                            starCount++;
+                        }
+                    }
+                }
+            }
+
+            // 3. Daylight filter
+            if (avgLum > 185 || (avgLum > 130 && avgB > avgR * 1.22 && starCount === 0)) {
+                showError("High daylight or bright interior illumination detected. Please capture outdoors under a night sky.");
+                return;
+            }
+
+            // 4. Pitch black / covered lens
+            if (avgLum < 0.6 && starCount === 0) {
+                showError("Sensor register is pitch black. Make sure the lens was uncovered.");
+                return;
+            }
+
+            const score = Math.min(100, Math.max(0, avgLum / 2.55));
+            renderResults(score, starCount);
+        }
+
+        function showError(message) {
+            resultsContainer.classList.remove('visible');
+            errorBanner.textContent = message;
+            errorBanner.style.display = 'block';
+        }
+
+        function renderResults(score, stars) {
+            errorBanner.style.display = 'none';
+            resultsContainer.classList.add('visible');
+
+            let themeColor = 'var(--emerald)';
+            let ratingText = 'Bortle 1–3 (Dark Sky)';
+            let advice = 'Very minimal ambient scatter. Faint nebulae, star clusters, and the Milky Way remain prominently visible.';
+
+            if (score >= 18 && score < 48) {
+                themeColor = 'var(--amber)';
+                ratingText = 'Bortle 4–6 (Suburban)';
+                advice = 'Noticeable sky glow. Contrast is washed out toward the horizon; only primary constellations stand out clearly.';
+            } else if (score >= 48) {
+                themeColor = 'var(--rose)';
+                ratingText = 'Bortle 7–9 (Urban Wash)';
+                advice = 'Intense upward light dispersion. High atmospheric backscatter obscures almost all stars except bright planets and the moon.';
+            }
+
+            document.documentElement.style.setProperty('--accent', themeColor);
+            bortleVal.textContent = ratingText;
+            bortleVal.style.color = themeColor;
+            adviceVal.textContent = advice;
+
+            const offset = CIRCUMFERENCE - (score / 100) * CIRCUMFERENCE;
+            gaugeMeter.style.strokeDashoffset = offset;
+
+            animateCounter(scoreCounter, 0, score, 900);
+        }
+
+        function animateCounter(element, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                element.textContent = (start + (end - start) * easeOut).toFixed(1);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        function toggleMenu() {
+            var menu = document.getElementById('menu');
+            if (menu.style.display === 'block') {
+                menu.style.display = 'none';
+            } else {
+                menu.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
