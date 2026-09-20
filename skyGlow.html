@@ -22,7 +22,7 @@
             --rose: #f43f5e;
         }
 
-        /* Fixed background image covering entire display without black gaps */
+        
         body {
             margin: 0;
             padding: 0;
@@ -103,7 +103,7 @@
             display: none;
         }
 
-        /* Scan Viewport */
+        
         .scan_viewport {
             position: relative;
             border-radius: 12px;
@@ -158,7 +158,7 @@
             100% { background-position: 0% 200%; }
         }
 
-        /* Results & Gauge */
+        
         .results {
             display: none;
             opacity: 0;
@@ -269,7 +269,7 @@
             text-align: left;
         }
 
-        /* Error notification */
+        
         .error_banner {
             display: none;
             background: rgba(248, 113, 113, 0.18);
@@ -372,7 +372,7 @@
         const canvas = document.getElementById('hidden_canvas');
         const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
-        const CIRCUMFERENCE = 2 * Math.PI * 50; // r = 50 -> ~314.159
+        const CIRCUMFERENCE = 2 * Math.PI * 50;
 
         fileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
@@ -439,7 +439,6 @@
                 return;
             }
 
-            // 2. Star point detection (Radial symmetry check)
             let starCount = 0;
             for (let y = 2; y < sampleSize - 2; y++) {
                 for (let x = 2; x < sampleSize - 2; x++) {
@@ -467,13 +466,11 @@
                 }
             }
 
-            // 3. Daylight filter
             if (avgLum > 185 || (avgLum > 130 && avgB > avgR * 1.22 && starCount === 0)) {
                 showError("High daylight or bright interior illumination detected. Please capture outdoors under a night sky.");
                 return;
             }
 
-            // 4. Pitch black / covered lens
             if (avgLum < 0.6 && starCount === 0) {
                 showError("Sensor register is pitch black. Make sure the lens was uncovered.");
                 return;
